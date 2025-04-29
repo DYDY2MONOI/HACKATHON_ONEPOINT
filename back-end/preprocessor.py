@@ -237,7 +237,7 @@ class PromptPreprocessor:
         if politeness_info:
             print("Result: inform_and_pass (politeness)")
             return {
-                "action": "inform_and_pass",
+                "action": "reject",
                 "message": politeness_info["message"],
                 "original_prompt": prompt,
             }
