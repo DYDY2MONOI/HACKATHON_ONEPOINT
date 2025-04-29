@@ -41,7 +41,6 @@ function App() {
         <div className="sidebar-header">
           <img src="/onepoint_logo.png" alt="OnePoint Logo" className="sidebar-logo" style={{ width: '200px', height: 'auto' }} />
         </div>
-        <button className="new-chat-btn" onClick={startNewChat}>Nouvelle conversation</button>
         <div className="history-list">
           {chatHistory.map(chat => (
             <div

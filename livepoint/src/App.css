@@ -4,7 +4,7 @@
   --onepoint-gray: #2c2c2c;
   --onepoint-light: #f1f1f1;
   --border-radius: 16px;
-  --border-color: #00aaff;
+  --border-color: #68cbfd;
   --onepoint-ligt-blue: #68cbfd;
 }
 
@@ -50,7 +50,7 @@ body {
 
 .new-chat-btn {
   margin: 16px;
-  padding: 12px;
+  padding: 12px 110px;
   background-color: var(--border-color);
   color: white;
   border: none;
@@ -61,7 +61,7 @@ body {
 }
 
 .new-chat-btn:hover {
-  background-color: #008ecc;
+  background-color: #2d80a3;
 }
 
 .history-list {
