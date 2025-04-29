@@ -53,10 +53,10 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isSequential }) 
       <div className={`max-w-[75%] ${isSequential ? '' : ''}`}>
         <div
           className={`
-            px-4 py-2 rounded-2xl break-words whitespace-pre-wrap // Added whitespace-pre-wrap
-            ${isUser
-              ? 'bg-blue-500 text-white rounded-tr-none shadow-sm'
-              : 'bg-gray-100 text-gray-900 rounded-tl-none shadow-sm'}
+            px-4 py-2 rounded-2xl break-words
+            ${isUser 
+              ? 'bg-blue-500 text-white rounded-tr-none shadow-sm' 
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-tl-none shadow-sm'}
           `}
         >
           {/* Use the helper function to render the content */}
@@ -66,7 +66,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isSequential }) 
         {/* --- Timestamp Logic (No Change) --- */}
         {!isSequential && (
           <div className={`flex items-center mt-1 text-xs ${isUser ? 'justify-end' : 'justify-start'}`}>
-            <span className="text-gray-400">
+            <span className="text-gray-400 dark:text-gray-500">
               {formatMessageTime(message.timestamp)}
             </span>
           </div>

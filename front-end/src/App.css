@@ -22,6 +22,10 @@
   border-radius: 20px;
 }
 
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(59, 130, 246, 0.5);
+}
+
 * {
   transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -35,4 +39,9 @@
 ::selection {
   background-color: rgba(37, 99, 235, 0.3);
   color: #f8fafc;
+}
+
+.dark ::selection {
+  background-color: rgba(59, 130, 246, 0.4);
+  color: #f1f5f9;
 }

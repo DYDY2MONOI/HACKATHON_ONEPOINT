@@ -180,7 +180,7 @@ const ChatContainer: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-white dark:bg-gray-900">
       <ChatHeader title={chatTitle} />
 
       <div className="flex-1 overflow-hidden">
