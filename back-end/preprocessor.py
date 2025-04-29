@@ -165,8 +165,9 @@ class PromptPreprocessor:
     ) -> Optional[Dict[str, Any]]:
         is_simple_definitional = False
         if len(normalized_prompt.split()) < 6:
+            french_definitional_pattern = r"^(qu'est-ce que c'est|c'est quoi|quel est|quelle est|définition de|qui est|c'est qui|où est|où se trouve)\s+"
             if re.match(
-                r"^(what is|what's|define|who is|who's|where is|where's|capital of)\s+",
+                french_definitional_pattern,
                 normalized_prompt,
             ):
                 is_simple_definitional = True
