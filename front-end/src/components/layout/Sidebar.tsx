@@ -106,8 +106,21 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
       <div className="p-4 border-t border-gray-200 dark:border-gray-700 mt-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
-              <User size={16} />
+            <div className="w-8 h-8 rounded-full overflow-hidden">
+              <img 
+                src="/human.webp" 
+                alt="User profile" 
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = ''; // Fallback to empty src which will show nothing
+                  e.currentTarget.parentElement?.classList.add('bg-blue-500', 'flex', 'items-center', 'justify-center', 'text-white');
+                  const span = document.createElement('span');
+                  span.textContent = 'U';
+                  span.className = 'text-xs font-bold';
+                  e.currentTarget.replaceWith(span);
+                }}
+              />
             </div>
             <div className="ml-2">
               <p className="text-sm font-medium text-gray-900 dark:text-gray-100">User</p>

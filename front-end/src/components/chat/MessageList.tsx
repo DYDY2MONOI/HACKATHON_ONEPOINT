@@ -3,6 +3,7 @@ import { Message } from '../../types';
 import MessageBubble from './MessageBubble';
 import TypingIndicator from './TypingIndicator';
 import { useSettings } from '../../context/SettingsContext';
+import { useChatContext } from '../../context/ChatContext';
 
 interface MessageListProps {
   messages: Message[];
@@ -12,6 +13,12 @@ interface MessageListProps {
 
 const MessageList: React.FC<MessageListProps> = ({ messages, isTyping, messageEndRef }) => {
   const { t } = useSettings();
+  const { addMessage } = useChatContext();
+
+  // Handle suggestion button clicks
+  const handleSuggestionClick = (suggestion: string) => {
+    addMessage(suggestion, 'user');
+  };
 
   if (messages.length === 0) {
     return (
@@ -25,18 +32,19 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isTyping, messageEn
         </p>
         <div className="grid grid-cols-2 gap-3 max-w-lg">
           {[
-            'howDoesThisWork',
-            'whatCanYouHelp',
-            'tellJoke',
-            'weatherToday'
-          ].map((suggestionKey, index) => (
+            { key: 'howDoesThisWork', text: 'How does this work?' },
+            { key: 'whatCanYouHelp', text: 'What can you help me with?' },
+            { key: 'tellJoke', text: 'Tell me a joke' },
+            { key: 'weatherToday', text: 'What\'s the weather today?' }
+          ].map((suggestion, index) => (
             <button 
               key={index}
+              onClick={() => handleSuggestionClick(suggestion.text)}
               className="px-4 py-2 text-sm bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-100 
               dark:hover:bg-gray-600 transition-all text-gray-700 dark:text-gray-200 text-left 
               border border-gray-200 dark:border-gray-600"
             >
-              {t(suggestionKey)}
+              {t(suggestion.key)}
             </button>
           ))}
         </div>

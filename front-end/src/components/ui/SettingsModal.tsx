@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { X, Moon, Sun, Languages } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext';
 
@@ -10,6 +10,16 @@ interface SettingsModalProps {
 const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
   const { theme, language, toggleTheme, setLanguage, t } = useSettings();
   const modalRef = useRef<HTMLDivElement>(null);
+  
+  // Create local state to track changes before saving
+  const [localTheme, setLocalTheme] = useState(theme);
+  const [localLanguage, setLocalLanguage] = useState(language);
+
+  // Update local state when props change (modal opens)
+  useEffect(() => {
+    setLocalTheme(theme);
+    setLocalLanguage(language);
+  }, [isOpen, theme, language]);
 
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
@@ -33,6 +43,29 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
     };
   }, [isOpen, onClose]);
 
+  const handleSaveChanges = () => {
+    // Only apply changes when save is clicked
+    if (localTheme !== theme) {
+      toggleTheme();
+    }
+    if (localLanguage !== language) {
+      setLanguage(localLanguage);
+    }
+    onClose();
+  };
+
+  const handleCancel = () => {
+    // Reset local state to current values (discard changes)
+    setLocalTheme(theme);
+    setLocalLanguage(language);
+    onClose();
+  };
+
+  // Local toggle function that only updates the local state
+  const handleLocalThemeToggle = () => {
+    setLocalTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -49,7 +82,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
         <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('settings')}</h2>
           <button 
-            onClick={onClose}
+            onClick={handleCancel}
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             aria-label="Close settings"
           >
@@ -60,7 +93,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
         <div className="p-6 space-y-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              {theme === 'dark' ? (
+              {localTheme === 'dark' ? (
                 <Moon size={20} className="text-gray-600 dark:text-gray-300 mr-3" />
               ) : (
                 <Sun size={20} className="text-amber-500 mr-3" />
@@ -71,8 +104,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
               <input 
                 type="checkbox" 
                 className="sr-only peer" 
-                checked={theme === 'dark'}
-                onChange={toggleTheme}
+                checked={localTheme === 'dark'}
+                onChange={handleLocalThemeToggle}
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
             </label>
@@ -85,8 +118,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
             </div>
             <select 
               className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-              value={language}
-              onChange={(e) => setLanguage(e.target.value as 'en' | 'fr' | 'es' | 'de')}
+              value={localLanguage}
+              onChange={(e) => setLocalLanguage(e.target.value as 'en' | 'fr' | 'es' | 'de')}
             >
               <option value="en">English</option>
               <option value="fr">Français</option>
@@ -98,13 +131,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 
         <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600 flex justify-end">
           <button 
-            onClick={onClose}
+            onClick={handleCancel}
             className="px-4 py-2 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors mr-2"
           >
             {t('cancel')}
           </button>
           <button 
-            onClick={onClose}
+            onClick={handleSaveChanges}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
           >
             {t('saveChanges')}
