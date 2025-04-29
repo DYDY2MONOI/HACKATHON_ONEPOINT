@@ -1,6 +1,5 @@
 import React from 'react';
 import { Message } from '../../types';
-import { CheckCheck } from 'lucide-react';
 
 interface MessageBubbleProps {
   message: Message;
@@ -44,12 +43,6 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isSequential }) 
             <span className="text-gray-400">
               {formatMessageTime(message.timestamp)}
             </span>
-            
-            {isUser && (
-              <span className="ml-1 text-blue-500 flex items-center">
-                <CheckCheck size={12} className="ml-1" />
-              </span>
-            )}
           </div>
         )}
       </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Info, Phone, Video } from 'lucide-react';
+import { Info } from 'lucide-react';
 
 interface ChatHeaderProps {
   title: string;
@@ -15,10 +15,6 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ title }) => {
           </div>
           <div className="ml-3">
             <h2 className="font-semibold text-gray-900">{title}</h2>
-            <div className="flex items-center">
-              <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
-              <span className="text-xs text-gray-500">Online</span>
-            </div>
           </div>
         </div>
         
