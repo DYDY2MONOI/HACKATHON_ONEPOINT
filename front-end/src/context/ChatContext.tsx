@@ -40,7 +40,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
       title: 'Project Ideas',
       lastMessage: 'What kind of project would you like to build?',
       timestamp: new Date(Date.now() - 3600000),
-      unread: true,
+      unread: false,
     },
     {
       id: '3',
@@ -62,32 +62,6 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     };
     
     setMessages((prev) => [...prev, newMessage]);
-    
-    if (sender === 'user') {
-      setIsTyping(true);
-      
-      setTimeout(() => {
-        const botResponse: Message = {
-          id: (Date.now() + 1).toString(),
-          content: getBotResponse(content),
-          sender: 'bot',
-          timestamp: new Date(),
-        };
-        
-        setMessages((prev) => [...prev, botResponse]);
-        setIsTyping(false);
-        
-        if (activeConversation) {
-          setConversations((prev) =>
-            prev.map((conv) =>
-              conv.id === activeConversation
-                ? { ...conv, lastMessage: botResponse.content, timestamp: new Date() }
-                : conv
-            )
-          );
-        }
-      }, 1500);
-    }
   };
 
   const startNewConversation = () => {
@@ -103,22 +77,6 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     setConversations((prev) => [newConversation, ...prev]);
     setActiveConversation(newId);
     setMessages([]);
-  };
-
-  const getBotResponse = (message: string): string => {
-    message = message.toLowerCase();
-    
-    if (message.includes('hello') || message.includes('hi')) {
-      return 'Hello! How can I assist you today?';
-    } else if (message.includes('help')) {
-      return 'I can help you with information, answer questions, or just chat. What would you like to know?';
-    } else if (message.includes('thanks') || message.includes('thank you')) {
-      return "You're welcome! Is there anything else you'd like help with?";
-    } else if (message.includes('bye')) {
-      return 'Goodbye! Feel free to return if you have more questions.';
-    } else {
-      return "I understand you want to discuss that. Could you provide more details so I can better assist you?";
-    }
   };
 
   return (

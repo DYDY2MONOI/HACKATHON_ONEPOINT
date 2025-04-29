@@ -20,7 +20,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isSequential }) 
     >
       {!isUser && !isSequential && (
         <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center mr-2 mt-1 shadow-sm text-white">
-          <span className="text-xs font-bold">AI</span>
+          <span className="text-xs font-bold">🤖</span>
         </div>
       )}
       

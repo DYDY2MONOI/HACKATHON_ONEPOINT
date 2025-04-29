@@ -1,34 +1,197 @@
-import React, { useRef, useEffect } from 'react';
-import { useChatContext } from '../../context/ChatContext';
-import ChatHeader from './ChatHeader';
-import MessageList from './MessageList';
-import ChatInput from './ChatInput';
+import React, { useRef, useEffect, useState } from "react";
+import { useChatContext } from "../../context/ChatContext";
+import ChatHeader from "./ChatHeader";
+import MessageList from "./MessageList";
+import ChatInput from "./ChatInput";
+import { Message } from "../../types";
+
+interface PreprocessorResponse {
+  action: "reject" | "inform_and_pass" | "pass" | "error";
+  message?: string;
+  original_prompt?: string;
+  reason?: string;
+  error?: string;
+}
+
+
+interface GeneratorResponse {
+  response?: string;
+  error?: string;
+}
+
+const PREPROCESSOR_API_URL = "http://localhost:5001/preprocess";
+const GENERATOR_API_URL = "http://localhost:5001/generate";
 
 const ChatContainer: React.FC = () => {
-  const { messages, addMessage, isTyping, activeConversation, conversations } = useChatContext();
+  const {
+    messages,
+    addMessage,
+    activeConversation,
+    conversations,
+  } = useChatContext();
+
   const messageEndRef = useRef<HTMLDivElement>(null);
-  const activeChat = conversations.find(c => c.id === activeConversation);
-  const chatTitle = activeChat?.title || 'New Chat';
+  const activeChat = conversations.find((c) => c.id === activeConversation);
+  const chatTitle = activeChat?.title || "New Chat";
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSendMessage = (content: string) => {
-    if (content.trim()) {
-      addMessage(content, 'user');
+  const callGeneratorAPI = async (prompt: string) => {
+    try {
+      const response = await fetch(GENERATOR_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: prompt }),
+      });
+
+      const result: GeneratorResponse = await response.json();
+
+      if (!response.ok || result.error) {
+        throw new Error(
+          result.error || `Model generation request failed: ${response.statusText}`,
+        );
+      }
+
+      if (result.response) {
+        const aiResponseMessage: Message = {
+          id: `assist-ai-${Date.now()}`,
+          content: result.response,
+          sender: "bot",
+          timestamp: new Date(),
+        };
+        addMessage(aiResponseMessage.content, aiResponseMessage.sender);
+      } else {
+        throw new Error("Received empty response from the model.");
+      }
+    } catch (error) {
+      console.error("Error during model generation call:", error);
+      const networkErrorMessage: Message = {
+        id: `assist-gen-error-${Date.now()}`,
+        content: `Sorry, I couldn't get a response from the local model. ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`,
+        sender: "bot",
+        timestamp: new Date(),
+      };
+      addMessage(networkErrorMessage.content, networkErrorMessage.sender);
+    } finally {
+    }
+  };
+
+  const handleSendMessage = async (content: string) => {
+    if (!content.trim() || isProcessing) {
+      return;
+    }
+
+    setIsProcessing(true);
+
+    const userMessage: Message = {
+      id: `user-${Date.now()}`,
+      content: content,
+      sender: "user",
+      timestamp: new Date(),
+    };
+    addMessage(userMessage.content, userMessage.sender);
+
+    try {
+      const preprocessResponse = await fetch(PREPROCESSOR_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: content }),
+      });
+
+      const preprocessResult: PreprocessorResponse =
+        await preprocessResponse.json();
+
+      if (!preprocessResponse.ok || preprocessResult.error) {
+        throw new Error(
+          preprocessResult.error ||
+            `Preprocessor request failed: ${preprocessResponse.statusText}`,
+        );
+      }
+
+      switch (preprocessResult.action) {
+        case "reject":
+          if (preprocessResult.message) {
+            const rejectionMessage: Message = {
+              id: `assist-${Date.now()}`,
+              content: preprocessResult.message,
+              sender: "bot",
+              timestamp: new Date(),
+            };
+            setTimeout(() => addMessage(rejectionMessage.content, rejectionMessage.sender), 300);
+          }
+          setIsProcessing(false);
+          break;
+
+        case "inform_and_pass":
+          if (preprocessResult.message) {
+            const infoMessage: Message = {
+              id: `assist-info-${Date.now()}`,
+              content: preprocessResult.message,
+              sender: "bot",
+              timestamp: new Date(),
+            };
+            setTimeout(() => addMessage(infoMessage.content, infoMessage.sender), 300);
+          }
+          if (preprocessResult.original_prompt) {
+            setTimeout(
+              () => callGeneratorAPI(preprocessResult.original_prompt!),
+              500,
+            );
+          } else {
+            setIsProcessing(false);
+          }
+          break;
+
+        case "pass":
+          if (preprocessResult.original_prompt) {
+            await callGeneratorAPI(preprocessResult.original_prompt);
+          } else {
+            setIsProcessing(false);
+          }
+          break;
+
+        default:
+          console.error("Unexpected preprocessor action:", preprocessResult);
+          throw new Error("Received an unexpected response from the preprocessor.");
+      }
+    } catch (error) {
+      console.error("Error during message handling:", error);
+      const networkErrorMessage: Message = {
+        id: `assist-proc-error-${Date.now()}`,
+        content: `Sorry, an error occurred while processing your request. ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`,
+        sender: "bot",
+        timestamp: new Date(),
+      };
+      addMessage(networkErrorMessage.content, networkErrorMessage.sender);
+      setIsProcessing(false);
+    } finally {
     }
   };
 
   return (
     <div className="flex flex-col h-full">
       <ChatHeader title={chatTitle} />
-      
+
       <div className="flex-1 overflow-hidden">
-        <MessageList messages={messages} isTyping={isTyping} messageEndRef={messageEndRef} />
+        <MessageList
+          messages={messages}
+          isTyping={
+            useChatContext().isTyping
+          }
+          messageEndRef={messageEndRef}
+        />
       </div>
-      
-      <ChatInput onSendMessage={handleSendMessage} />
+
+      <ChatInput onSendMessage={handleSendMessage} disabled={isProcessing} />
     </div>
   );
 };

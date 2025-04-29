@@ -99,7 +99,6 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
             </div>
             <div className="ml-2">
               <p className="text-sm font-medium text-gray-900">User</p>
-              <p className="text-xs text-gray-500">Free Plan</p>
             </div>
           </div>
           <button className="p-2 rounded-md hover:bg-gray-100 transition-all">
