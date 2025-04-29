@@ -53,7 +53,7 @@ const ChatContainer: React.FC = () => {
 
       if (!response.ok || result.error) {
         throw new Error(
-          result.error || `Model generation request failed: ${response.statusText}`,
+          result.error || `Echec: ${response.statusText}`,
         );
       }
 
@@ -66,14 +66,14 @@ const ChatContainer: React.FC = () => {
         };
         addMessage(aiResponseMessage.content, aiResponseMessage.sender);
       } else {
-        throw new Error("Received empty response from the model.");
+        throw new Error("Reponse vide du model.");
       }
     } catch (error) {
-      console.error("Error during model generation call:", error);
+      console.error("Erreur:", error);
       const networkErrorMessage: Message = {
         id: `assist-gen-error-${Date.now()}`,
-        content: `Sorry, I couldn't get a response from the local model. ${
-          error instanceof Error ? error.message : "Unknown error"
+        content: `Pas de reponse du model local. ${
+          error instanceof Error ? error.message : "Erreur inconnue"
         }`,
         sender: "bot",
         timestamp: new Date(),
@@ -112,7 +112,7 @@ const ChatContainer: React.FC = () => {
       if (!preprocessResponse.ok || preprocessResult.error) {
         throw new Error(
           preprocessResult.error ||
-            `Preprocessor request failed: ${preprocessResponse.statusText}`,
+            `Preprocessour a echoue: ${preprocessResponse.statusText}`,
         );
       }
 
@@ -159,14 +159,14 @@ const ChatContainer: React.FC = () => {
           break;
 
         default:
-          console.error("Unexpected preprocessor action:", preprocessResult);
-          throw new Error("Received an unexpected response from the preprocessor.");
+          console.error("Action pre-processeur:", preprocessResult);
+          throw new Error("Reponse non expecte du pre processeur.");
       }
     } catch (error) {
       console.error("Error during message handling:", error);
       const networkErrorMessage: Message = {
         id: `assist-proc-error-${Date.now()}`,
-        content: `Sorry, an error occurred while processing your request. ${
+        content: `Une erreur est apparue pendant votre requete. ${
           error instanceof Error ? error.message : "Unknown error"
         }`,
         sender: "bot",

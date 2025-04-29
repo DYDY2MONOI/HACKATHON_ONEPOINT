@@ -4,7 +4,7 @@ import { useSettings } from '../../context/SettingsContext';
 
 interface ChatInputProps {
   onSendMessage: (content: string) => void;
-  disabled?: boolean; // Add disabled prop
+  disabled?: boolean; 
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled }) => {
@@ -13,24 +13,22 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled }) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    if (inputRef.current && !disabled) { // Only focus if not disabled
+    if (inputRef.current && !disabled) { 
       inputRef.current.focus();
     }
-  }, [disabled]); // Refocus when enabled
+  }, [disabled]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (message.trim() && !disabled) { // Check disabled state
+    if (message.trim() && !disabled) {
       onSendMessage(message);
       setMessage("");
 
-      // Reset textarea height after sending
       if (inputRef.current) {
-        inputRef.current.style.height = "auto"; // Reset first
-        inputRef.current.style.height = "44px"; // Set back to min height
+        inputRef.current.style.height = "auto"; 
+        inputRef.current.style.height = "44px"; 
       }
 
-      // Refocus after a short delay, only if not disabled
       setTimeout(() => {
         if (!disabled) {
           inputRef.current?.focus();
@@ -42,14 +40,13 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled }) => {
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
 
-    // Auto-resize logic
     const textarea = e.target;
-    textarea.style.height = "auto"; // Reset height to recalculate scrollHeight
-    textarea.style.height = Math.min(textarea.scrollHeight, 150) + "px"; // Apply new height up to max
+    textarea.style.height = "auto";
+    textarea.style.height = Math.min(textarea.scrollHeight, 150) + "px"; 
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey && !disabled) { // Check disabled state
+    if (e.key === "Enter" && !e.shiftKey && !disabled) {
       e.preventDefault();
       handleSubmit(e);
     }
@@ -72,7 +69,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled }) => {
                border border-gray-200 dark:border-gray-700"
               rows={1}
               style={{ minHeight: "44px" }}
-              disabled={disabled} // HTML disabled attribute
+              disabled={disabled} 
             />
           </div>
 
@@ -84,7 +81,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled }) => {
               ${disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"}
             `}
             aria-label="Send message"
-            disabled={disabled} // Disable button
+            disabled={disabled}
           >
             <Send size={18} />
           </button>

@@ -18,7 +18,7 @@ const renderContentWithLinks = (text: string) => {
             className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
             onClick={(e) => e.stopPropagation()}
           >
-            {part} {/* Display the URL as the link text */}
+            {part}
           </a>
         );
       } else {
@@ -45,7 +45,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isSequential }) 
       }}
     >
       {!isUser && !isSequential && (
-        <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center mr-2 mt-1 shadow-sm text-white shrink-0"> {/* Added shrink-0 */}
+        <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center mr-2 mt-1 shadow-sm text-white shrink-0">
           <span className="text-xs font-bold">🤖</span>
         </div>
       )}
@@ -59,11 +59,9 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isSequential }) 
               : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-tl-none shadow-sm'}
           `}
         >
-          {/* Use the helper function to render the content */}
           {renderContentWithLinks(message.content)}
         </div>
 
-        {/* --- Timestamp Logic (No Change) --- */}
         {!isSequential && (
           <div className={`flex items-center mt-1 text-xs ${isUser ? 'justify-end' : 'justify-start'}`}>
             <span className="text-gray-400 dark:text-gray-500">
@@ -73,8 +71,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isSequential }) 
         )}
       </div>
       {isUser && !isSequential && (
-        <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center ml-2 mt-1 shadow-sm text-gray-700 shrink-0"> {/* Changed color, Added shrink-0 */}
-          <span className="text-xs font-bold">You</span>
+        <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center ml-2 mt-1 shadow-sm text-gray-700 shrink-0">
         </div>
       )}
       {isUser && isSequential && <div className="w-8 ml-2 shrink-0"></div>}
@@ -83,7 +80,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isSequential }) 
 };
 
 const formatMessageTime = (date: Date): string => {
-  return new Date(date).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }); // Example: 4:30 PM
+  return new Date(date).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
 };
 
 export default MessageBubble;

@@ -20,7 +20,6 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ title }) => {
             <h2 className="font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
             <div className="flex items-center">
               <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
-              <span className="text-xs text-gray-500 dark:text-gray-400">{t('online')}</span>
             </div>
           </div>
         </div>
