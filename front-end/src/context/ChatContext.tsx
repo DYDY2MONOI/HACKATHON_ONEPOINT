@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Message, Conversation } from '../types';
 
 interface ChatContextType {
@@ -25,33 +25,84 @@ interface ChatProviderProps {
   children: ReactNode;
 }
 
+// Keys for localStorage
+const STORAGE_KEYS = {
+  MESSAGES: 'onepoint_chat_messages',
+  CONVERSATIONS: 'onepoint_chat_conversations',
+  ACTIVE_CONVERSATION: 'onepoint_active_conversation',
+};
+
+// Helper to parse JSON from localStorage with date handling
+const getStoredData = <T,>(key: string, defaultValue: T): T => {
+  try {
+    const stored = localStorage.getItem(key);
+    if (!stored) return defaultValue;
+    
+    // Parse JSON and convert date strings back to Date objects for timestamps
+    const data = JSON.parse(stored, (key, value) => {
+      if (key === 'timestamp' && typeof value === 'string') {
+        return new Date(value);
+      }
+      return value;
+    });
+    
+    return data;
+  } catch (error) {
+    console.error(`Error reading from localStorage (${key}):`, error);
+    return defaultValue;
+  }
+};
+
 export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [conversations, setConversations] = useState<Conversation[]>([
-    {
-      id: '1',
-      title: 'Getting Started',
-      lastMessage: 'How can I help you today?',
-      timestamp: new Date(),
-      unread: false,
-    },
-    {
-      id: '2',
-      title: 'Project Ideas',
-      lastMessage: 'What kind of project would you like to build?',
-      timestamp: new Date(Date.now() - 3600000),
-      unread: false,
-    },
-    {
-      id: '3',
-      title: 'Technical Support',
-      lastMessage: 'Have you tried restarting your device?',
-      timestamp: new Date(Date.now() - 86400000),
-      unread: false,
-    },
-  ]);
-  const [activeConversation, setActiveConversation] = useState<string | null>('1');
+  // Initialize state from localStorage or defaults
+  const [messages, setMessages] = useState<Message[]>(() => 
+    getStoredData(STORAGE_KEYS.MESSAGES, [])
+  );
+  
+  const [conversations, setConversations] = useState<Conversation[]>(() => 
+    getStoredData(STORAGE_KEYS.CONVERSATIONS, [
+      {
+        id: '1',
+        title: 'Getting Started',
+        lastMessage: 'How can I help you today?',
+        timestamp: new Date(),
+        unread: false,
+      },
+      {
+        id: '2',
+        title: 'Project Ideas',
+        lastMessage: 'What kind of project would you like to build?',
+        timestamp: new Date(Date.now() - 3600000),
+        unread: false,
+      },
+      {
+        id: '3',
+        title: 'Technical Support',
+        lastMessage: 'Have you tried restarting your device?',
+        timestamp: new Date(Date.now() - 86400000),
+        unread: false,
+      },
+    ])
+  );
+  
+  const [activeConversation, setActiveConversation] = useState<string | null>(() => 
+    getStoredData(STORAGE_KEYS.ACTIVE_CONVERSATION, '1')
+  );
+  
   const [isTyping, setIsTyping] = useState(false);
+
+  // Save to localStorage whenever data changes
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(messages));
+  }, [messages]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.CONVERSATIONS, JSON.stringify(conversations));
+  }, [conversations]);
+  
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.ACTIVE_CONVERSATION, JSON.stringify(activeConversation));
+  }, [activeConversation]);
 
   const addMessage = (content: string, sender: 'user' | 'bot') => {
     const newMessage: Message = {
@@ -62,6 +113,21 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     };
     
     setMessages((prev) => [...prev, newMessage]);
+    
+    // Update conversation's last message
+    if (activeConversation) {
+      setConversations(prev => 
+        prev.map(conv => 
+          conv.id === activeConversation 
+            ? { 
+                ...conv, 
+                lastMessage: content.substring(0, 50) + (content.length > 50 ? '...' : ''),
+                timestamp: new Date()
+              } 
+            : conv
+        )
+      );
+    }
   };
 
   const startNewConversation = () => {
@@ -76,7 +142,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     
     setConversations((prev) => [newConversation, ...prev]);
     setActiveConversation(newId);
-    setMessages([]);
+    setMessages([]); // Clear messages for new conversation
   };
 
   const setActiveConversationWithRead = (id: string) => {
@@ -90,6 +156,9 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
           : conv
       )
     );
+    
+    // Load messages for this conversation (in a real app, you'd fetch them)
+    // Here we're simulating the behavior since we don't have conversation-specific messages yet
   };
 
   const getBotResponse = (message: string): string => {
