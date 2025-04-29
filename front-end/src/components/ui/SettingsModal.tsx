@@ -11,11 +11,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
   const { theme, language, toggleTheme, setLanguage, t } = useSettings();
   const modalRef = useRef<HTMLDivElement>(null);
   
-  // Create local state to track changes before saving
   const [localTheme, setLocalTheme] = useState(theme);
   const [localLanguage, setLocalLanguage] = useState(language);
 
-  // Update local state when props change (modal opens)
   useEffect(() => {
     setLocalTheme(theme);
     setLocalLanguage(language);
@@ -44,7 +42,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
   }, [isOpen, onClose]);
 
   const handleSaveChanges = () => {
-    // Only apply changes when save is clicked
     if (localTheme !== theme) {
       toggleTheme();
     }
@@ -55,13 +52,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
   };
 
   const handleCancel = () => {
-    // Reset local state to current values (discard changes)
     setLocalTheme(theme);
     setLocalLanguage(language);
     onClose();
   };
 
-  // Local toggle function that only updates the local state
   const handleLocalThemeToggle = () => {
     setLocalTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };

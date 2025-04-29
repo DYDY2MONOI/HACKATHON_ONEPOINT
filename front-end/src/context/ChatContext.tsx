@@ -82,7 +82,6 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
   const setActiveConversationWithRead = (id: string) => {
     setActiveConversation(id);
     
-    // Mark the conversation as read when it becomes active
     setConversations(prev => 
       prev.map(conv => 
         conv.id === id 
@@ -91,31 +90,6 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
       )
     );
   };
-
-  const getBotResponse = (message: string): string => {
-    message = message.toLowerCase();
-    
-    if (message.includes('hello') || message.includes('hi')) {
-      return 'Hello! How can I assist you today?';
-    } else if (message.includes('help')) {
-      return 'I can help you with information, answer questions, or just chat. What would you like to know?';
-    } else if (message.includes('thanks') || message.includes('thank you')) {
-      return "You're welcome! Is there anything else you'd like help with?";
-    } else if (message.includes('bye')) {
-      return 'Goodbye! Feel free to return if you have more questions.';
-    } else if (message.includes('how does this work')) {
-      return 'This is a chat interface where you can ask questions and get responses. Just type your message and I\'ll do my best to help!';
-    } else if (message.includes('what can you help me with')) {
-      return 'I can help with answering questions, providing information, brainstorming ideas, discussing topics, or just having a friendly chat!';
-    } else if (message.includes('tell me a joke') || message.includes('joke')) {
-      return 'Why don\'t scientists trust atoms? Because they make up everything!';
-    } else if (message.includes('weather') || message.includes('weather today')) {
-      return 'I don\'t have access to real-time weather data, but I can suggest checking a weather service or looking outside your window for the most current conditions!';
-    } else {
-      return "I understand you want to discuss that. Could you provide more details so I can better assist you?";
-    }
-  };
-
   return (
     <ChatContext.Provider
       value={{

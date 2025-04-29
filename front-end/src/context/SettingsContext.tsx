@@ -25,7 +25,6 @@ interface SettingsProviderProps {
   children: ReactNode;
 }
 
-// Translations
 const translations: Record<Language, Record<string, string>> = {
   en: {
     welcome: 'Welcome to OnePoint GenAI Eco',
@@ -105,7 +104,6 @@ const translations: Record<Language, Record<string, string>> = {
   }
 };
 
-// Load settings from localStorage
 const loadFromStorage = <T,>(key: string, defaultValue: T): T => {
   if (typeof window === 'undefined') return defaultValue;
   
@@ -118,7 +116,6 @@ const loadFromStorage = <T,>(key: string, defaultValue: T): T => {
   }
 };
 
-// Save settings to localStorage
 const saveToStorage = <T,>(key: string, value: T): void => {
   if (typeof window === 'undefined') return;
   
@@ -130,13 +127,11 @@ const saveToStorage = <T,>(key: string, value: T): void => {
 };
 
 export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) => {
-  // Get preferred color scheme from system
   const getPreferredTheme = (): Theme => {
     if (typeof window === 'undefined') return 'light';
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   };
 
-  // Initialize state from localStorage or defaults
   const [theme, setTheme] = useState<Theme>(() => 
     loadFromStorage('theme', getPreferredTheme())
   );
@@ -144,7 +139,6 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) 
     loadFromStorage('language', 'en')
   );
 
-  // Apply theme class to document
   useEffect(() => {
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -154,7 +148,6 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) 
     saveToStorage('theme', theme);
   }, [theme]);
 
-  // Save language preference
   useEffect(() => {
     saveToStorage('language', language);
   }, [language]);
@@ -167,7 +160,6 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) 
     setLanguageState(lang);
   };
 
-  // Translation function
   const t = (key: string): string => {
     return translations[language][key] || key;
   };
