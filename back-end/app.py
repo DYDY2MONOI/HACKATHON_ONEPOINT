@@ -97,19 +97,15 @@ def handle_generate():
     try:
         response = ollama.chat(
             model=OLLAMA_MODEL,
-            messages=[
-                {'role': 'user', 'content': messages}
-            ]
+            messages=messages
         )
-
         generated_text = response['message']['content']
         print(f"Model '{OLLAMA_MODEL}' generated response: '{generated_text[:100]}...'")
-
         return jsonify({"response": generated_text}), 200
 
     except ollama.ResponseError as e:
          print(f"❌ Ollama Response Error [/generate]: {e.error}")
-         error_message = f"Error interacting with the local model ('{OLLAMA_MODEL}'). Is the model pulled and Ollama running? Details: {e.error}"
+         error_message = f"Error interacting with the local model ('{OLLAMA_MODEL}'). Details: {e.error}"
          return jsonify({"error": error_message}), 503
     except Exception as e:
         print(f"❌ Unexpected Error [/generate]: {e}")
