@@ -95,10 +95,7 @@ class PromptPreprocessor:
                     "action": "reject",
                     "reason": "repeated_request",
                     "message": (
-                        "This request seems very similar to one you made "
-                        "recently. Please review the conversation history. "
-                        "Re-using previous answers helps save computational "
-                        "resources."
+                        "Cette demande semble très similaire à celle que vous avez faite récemment. Veuillez consulter l'historique de la conversation."
                     ),
                 }
         return None
@@ -110,10 +107,7 @@ class PromptPreprocessor:
                 "action": "inform",
                 "reason": "politeness",
                 "message": (
-                    "(Quick tip: While politeness is appreciated, adding "
-                    "greetings or conversational phrases increases the "
-                    "processing required by the AI. For efficiency, try "
-                    "getting straight to the point in future prompts!)"
+                    "Ajouter des salutations ou des phrases de conversation augmente le traitement requis par l'IA. Pour plus d'efficacité, essayez  d'aller droit au but dans vos futures demandes."
                 ),
             }
         return None
@@ -136,13 +130,7 @@ class PromptPreprocessor:
                         "action": "reject",
                         "reason": "bash_command",
                         "message": (
-                            f"It looks like you're asking about the "
-                            f"'{command_name}' command. The official manual "
-                            f"page ('man page') is the best source.\n\n"
-                            f"On Linux/macOS, try running this in your terminal:\n"
-                            f"```bash\nman {command_name}\n```\n"
-                            f"Reading the man page directly is often faster "
-                            f"and more energy-efficient than asking the AI."
+                            f" Il semble que votre question porte sur la commande '{command_name}'. La page de manuel officielle (« man page ») est la meilleure source. Sous Linux/macOS, essayez d'exécuter ceci dans votre terminal : man {command_name}"
                         ),
                     }
         return None
@@ -167,10 +155,7 @@ class PromptPreprocessor:
                 "action": "reject",
                 "reason": "non_cs_domain",
                 "message": (
-                    "This request appears unrelated to computer science. "
-                    "To conserve resources, this assistant focuses on "
-                    "CS-related topics. Please try a general-purpose search "
-                    "engine or a different AI assistant."
+                    "Cette demande ne semble pas avoir de rapport avec l'informatique. Afin de préserver les ressources, cet assistant se concentre sur les sujets liés à l'informatique."
                 ),
             }
         return None
@@ -190,20 +175,14 @@ class PromptPreprocessor:
             print("Simple definitional query detected.")
             try:
                 query_encoded = urllib.parse.quote_plus(prompt)
-                search_link = f"https://duckduckgo.com/?q={query_encoded}"
+                search_link = f"https://letmegooglethat.com/?q={query_encoded}"
                 message = (
-                    "This looks like a straightforward question that a quick web search can answer!\n\n"
-                    f"Try searching directly: {search_link}\n\n"
-                    "(Using web search for simple facts is often faster and saves energy "
-                    "compared to querying the AI.)"
+                    f"Il s'agit d'une question simple à laquelle une recherche rapide sur Internet peut répondre ! Essayez de faire une recherche directe : {search_link}"
                 )
             except Exception as e:
                  print(f"Error creating search link: {e}")
                  message = (
-                    "This looks like a straightforward question that a quick web search can answer! "
-                    "Try searching for it directly online.\n\n"
-                    "(Using web search for simple facts is often faster and saves energy "
-                    "compared to querying the AI.)"
+                    "Il s'agit d'une question simple à laquelle une recherche rapide sur Internet peut répondre ! Essayez de faire une recherche directe."
                 )
 
             return {
@@ -221,7 +200,7 @@ class PromptPreprocessor:
             return {
                 "action": "reject",
                 "reason": "empty_prompt",
-                "message": "Prompt cannot be empty. Please enter a question or request.",
+                "message": "Le prompt ne peut pas être vide. Veuillez saisir une question ou une demande.",
             }
 
         normalized_prompt = self._normalize_prompt(prompt)
