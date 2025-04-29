@@ -1,0 +1,22 @@
+:root {
+  --onepoint-orange: #FF6600;
+  --onepoint-dark: #222222;
+  --onepoint-gray: #444444;
+  --onepoint-light: #F5F5F5;
+  --border-radius: 8px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--onepoint-light);
+  color: var(--onepoint-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
