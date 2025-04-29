@@ -1,0 +1,10 @@
+[
+    "ls", "cd", "pwd", "mkdir", "rmdir", "rm", "cp", "mv", "cat", "less",
+    "more", "head", "tail", "grep", "find", "awk", "sed", "sort", "uniq",
+    "wc", "chmod", "chown", "ssh", "scp", "ping", "netstat", "ifconfig", "ip",
+    "ps", "top", "kill", "tar", "gzip", "gunzip", "wget", "curl", "man",
+    "sudo", "apt", "yum", "dnf", "systemctl", "journalctl", "echo", "printf",
+    "read", "export", "unset", "alias", "history", "df", "du", "free",
+    "uname", "whoami", "passwd", "date", "time", "sleep", "exit"
+]
+  

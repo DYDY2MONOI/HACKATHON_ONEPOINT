@@ -40,7 +40,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
       title: 'Project Ideas',
       lastMessage: 'What kind of project would you like to build?',
       timestamp: new Date(Date.now() - 3600000),
-      unread: true,
+      unread: false,
     },
     {
       id: '3',
@@ -62,32 +62,6 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     };
     
     setMessages((prev) => [...prev, newMessage]);
-    
-    if (sender === 'user') {
-      setIsTyping(true);
-      
-      setTimeout(() => {
-        const botResponse: Message = {
-          id: (Date.now() + 1).toString(),
-          content: getBotResponse(content),
-          sender: 'bot',
-          timestamp: new Date(),
-        };
-        
-        setMessages((prev) => [...prev, botResponse]);
-        setIsTyping(false);
-        
-        if (activeConversation) {
-          setConversations((prev) =>
-            prev.map((conv) =>
-              conv.id === activeConversation
-                ? { ...conv, lastMessage: botResponse.content, timestamp: new Date() }
-                : conv
-            )
-          );
-        }
-      }, 1500);
-    }
   };
 
   const startNewConversation = () => {

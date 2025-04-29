@@ -14,7 +14,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ title }) => {
       <div className="flex justify-between items-center">
         <div className="flex items-center">
           <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white shadow-sm">
-            <span className="font-semibold">{title.charAt(0)}</span>
+            <span className="font-semibold">🤖</span>
           </div>
           <div className="ml-3">
             <h2 className="font-semibold text-gray-900 dark:text-gray-100">{title}</h2>

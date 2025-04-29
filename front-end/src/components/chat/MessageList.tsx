@@ -24,7 +24,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isTyping, messageEn
     return (
       <div className="flex flex-col items-center justify-center h-full p-6 text-center bg-gray-50 dark:bg-gray-800">
         <div className="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center mb-4 shadow-lg text-white">
-          <span className="text-2xl">👋</span>
+          <span className="text-2xl">🤖</span>
         </div>
         <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('welcome')}</h3>
         <p className="text-gray-600 dark:text-gray-300 max-w-md mb-6">
