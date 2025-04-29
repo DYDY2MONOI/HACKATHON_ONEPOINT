@@ -113,7 +113,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
                 className="w-full h-full object-cover"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
-                  e.currentTarget.src = ''; // Fallback to empty src which will show nothing
+                  e.currentTarget.src = ''; 
                   e.currentTarget.parentElement?.classList.add('bg-blue-500', 'flex', 'items-center', 'justify-center', 'text-white');
                   const span = document.createElement('span');
                   span.textContent = 'U';
@@ -124,7 +124,6 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
             </div>
             <div className="ml-2">
               <p className="text-sm font-medium text-gray-900 dark:text-gray-100">User</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">{t('freePlan')}</p>
             </div>
           </div>
           <button 
