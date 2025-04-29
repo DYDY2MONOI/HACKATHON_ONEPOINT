@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Send } from "lucide-react";
+<<<<<<< HEAD
 import { useSettings } from '../../context/SettingsContext';
+=======
+>>>>>>> cd0bddf693fd4db5220ed1106393132254072651
 
 interface ChatInputProps {
   onSendMessage: (content: string) => void;
