@@ -85,14 +85,11 @@ def handle_generate():
     print(f"Received request for model generation. Model: '{OLLAMA_MODEL}'")
     print(f"   User Prompt: '{user_prompt[:100]}...'")
 
-    messages = []
-    if SYSTEM_PROMPT_CONTENT:
-        messages.append({'role': 'system', 'content': SYSTEM_PROMPT_CONTENT})
-        print("Prepending loaded system prompt.")
-    else:
-        print("No system prompt loaded or file was empty/missing.")
+    message = f"{SYSTEM_PROMPT_CONTENT}\nUser's question: {user_prompt}"
 
-    messages.append({'role': 'user', 'content': user_prompt})
+    messages = [
+        {"role": "user", "content": message}
+    ]
 
     try:
         response = ollama.chat(
