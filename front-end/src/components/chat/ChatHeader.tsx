@@ -1,9 +1,6 @@
 import React from 'react';
 import { Info } from 'lucide-react';
-<<<<<<< HEAD
 import { useSettings } from '../../context/SettingsContext';
-=======
->>>>>>> cd0bddf693fd4db5220ed1106393132254072651
 
 interface ChatHeaderProps {
   title: string;
@@ -20,15 +17,11 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ title }) => {
             <span className="font-semibold">{title.charAt(0)}</span>
           </div>
           <div className="ml-3">
-<<<<<<< HEAD
             <h2 className="font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
             <div className="flex items-center">
               <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
               <span className="text-xs text-gray-500 dark:text-gray-400">{t('online')}</span>
             </div>
-=======
-            <h2 className="font-semibold text-gray-900">{title}</h2>
->>>>>>> cd0bddf693fd4db5220ed1106393132254072651
           </div>
         </div>
         
