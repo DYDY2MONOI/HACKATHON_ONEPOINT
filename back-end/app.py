@@ -10,7 +10,7 @@ from preprocessor import PromptPreprocessor, DEFAULT_POLITENESS_FILE, \
 app = Flask(__name__)
 
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
-OLLAMA_MODEL = os.environ.get('OLLAMA_MODEL', 'llama3:8b')
+OLLAMA_MODEL = os.environ.get('OLLAMA_MODEL', 'llama3.2:latest')
 
 CORS(app, resources={
     r"/preprocess": {"origins": FRONTEND_URL},
