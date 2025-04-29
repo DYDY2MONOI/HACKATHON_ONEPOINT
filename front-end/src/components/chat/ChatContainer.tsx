@@ -80,6 +80,7 @@ const ChatContainer: React.FC = () => {
       };
       addMessage(networkErrorMessage.content, networkErrorMessage.sender);
     } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -174,6 +175,7 @@ const ChatContainer: React.FC = () => {
       addMessage(networkErrorMessage.content, networkErrorMessage.sender);
       setIsProcessing(false);
     } finally {
+      setIsProcessing(false);
     }
   };
 
