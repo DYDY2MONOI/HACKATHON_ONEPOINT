@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Paperclip, Mic, Smile } from "lucide-react";
+import { Send } from "lucide-react";
+import { useSettings } from '../../context/SettingsContext';
 
 interface ChatInputProps {
   onSendMessage: (content: string) => void;
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
+  const { t } = useSettings();
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -43,7 +45,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
   };
 
   return (
-    <div className="px-4 py-3 bg-white border-t border-gray-200">
+    <div className="px-4 py-3 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
       <form onSubmit={handleSubmit} className="relative">
         <div className="flex items-center">
           <div className="flex-1 mx-2 relative">
@@ -52,8 +54,11 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
               value={message}
               onChange={handleTextareaChange}
               onKeyDown={handleKeyDown}
-              placeholder="Type a message..."
-              className="w-full bg-gray-50 rounded-lg px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-400 resize-none max-h-36 transition-all border border-gray-200"
+              placeholder={t('typeMessage')}
+              className="w-full bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3 pr-12
+               focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-gray-100
+               placeholder-gray-400 dark:placeholder-gray-500 resize-none max-h-36 transition-all
+               border border-gray-200 dark:border-gray-700"
               rows={1}
               style={{ minHeight: "44px" }}
             />
